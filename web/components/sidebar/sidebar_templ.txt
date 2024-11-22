@@ -1,0 +1,28 @@
+<div class=\"bg-gray-800 text-white min-h-screen grid grid-rows-[auto_1fr_auto]\">
+</div>
+<a href=\"/\" class=\"
+\">
+<img src=\"
+\" class=\"w-24 h-24 mx-auto p-4\" alt=\"CU Logo\">
+<h1 class=\"
+\">
+</h1></a>
+<nav>
+</nav>
+<footer>
+</footer>
+<a href=\"
+\" class=\"block px-3 py-4 hover:bg-gray-700 border-l-4 border-transparent hover:border-cu_red-400\"
+>
+</a>
+<details class=\"block [&amp;_.summary-indicator]:open:-rotate-180 cursor-pointer [&amp;_summary]:open:bg-gray-600 [&amp;_summary]:open:border-cu_red-400\" name=\"nav-submenu\" id=\"
+\"><summary class=\"px-3 py-4 hover:bg-gray-700 list-none grid grid-cols-[1fr_auto] border-l-4 border-transparent hover:border-cu_red-400\"><span>
+</span> <span class=\"summary-indicator text-xl\">🞃</span></summary><section>
+</section>
+</details>
+<a href=\"
+\" class=\"block px-8 py-4 hover:bg-gray-700 border-l-4 border-transparent hover:border-cu_red-400\"
+>
+</a>
+<script>\n\t\t\tfunction sidebarMenuToggler(details){\n\t\t\t\tlet section=details.querySelector(\"section\");\n\t\t\t\tlet animationClasses=[\"animate-flip-down\",\"animate-once\",\"animate-duration-[250ms]\",\"animate-ease-out\"];\n\n\t\t\t\tif (!details.open){\n\t\t\t\t\tsection.classList.remove(...animationClasses);\n\t\t\t\t\tlocalStorage.removeItem(details.id);\n\t\t\t\t} else {\n\t\t\t\t\tsection.classList.add(...animationClasses);\n\t\t\t\t\tlocalStorage.setItem(details.id,\"open\")\n\t\t\t\t}\n\n\t\t\t}\n\t\t</script>
+<script>{\n\t\tlet details=document.currentScript.closest(\"details\");\n\t\tdetails.open=localStorage.getItem(details.id)===\"open\";\n\n\t\tsetTimeout(()=>details.addEventListener(\"toggle\",(ev)=>sidebarMenuToggler(ev.target)),100);\n\t}</script>

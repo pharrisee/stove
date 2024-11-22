@@ -1,0 +1,26 @@
+package root
+
+import (
+	"github.com/labstack/echo/v4"
+	"github.com/pharrisee/stove/app"
+	"github.com/pharrisee/stove/web/layouts"
+	"net/http"
+)
+
+templ (c *Root) ContactView() {
+	@layouts.Layout() {
+		@c.ContactPartial()
+	}
+}
+
+templ (c *Root) ContactPartial() {
+	<h1 class="text-4xl">Contact</h1>
+}
+
+func (r *Root) Contact(c echo.Context) error {
+	ctx := app.WrapCtx(c)
+	if ctx.IsHTMX() {
+		return ctx.Templ(http.StatusOK, r.ContactPartial())
+	}
+	return ctx.Templ(http.StatusOK, r.ContactView())
+}

@@ -1,0 +1,107 @@
+package sidebar
+
+import . "github.com/pharrisee/stove/web/components"
+
+templ New() {
+	<div class="bg-gray-800 text-white min-h-screen grid grid-rows-[auto_1fr_auto]">
+		{ children... }
+	</div>
+}
+
+templ Header(img ...string) {
+	{{ hasImage := len(img) > 0 }}
+	<a href="/" class={ templ.KV("grid grid-cols-[auto_1fr] items-center", hasImage) }>
+		if hasImage {
+			<img src={ img[0] } class="w-24 h-24 mx-auto p-4" alt="CU Logo"/>
+		}
+		<h1 class={ "text-4xl pt-4 pb-4", templ.KV("text-center",!hasImage) }>
+			{ children... }
+		</h1>
+	</a>
+}
+
+templ Nav() {
+	<nav>
+		{ children... }
+	</nav>
+}
+
+templ Footer() {
+	<footer>
+		{ children... }
+	</footer>
+}
+
+templ Link(href string, text string, attributes ...templ.Attributes) {
+	{{ attr := templ.Attributes{} }}
+	if len(attributes) != 0 {
+		{{ attr = attributes[0] }}
+	}
+	<a href={ templ.SafeURL(href) } class="block px-3 py-4 hover:bg-gray-700 border-l-4 border-transparent hover:border-cu_red-400" { attr... }>
+		{ text }
+	</a>
+}
+
+templ Menu(title string) {
+	// id used for localStorage of open state
+	{{ _id := ID(title) }}
+	<details
+		class="block [&_.summary-indicator]:open:-rotate-180 cursor-pointer [&_summary]:open:bg-gray-600 [&_summary]:open:border-cu_red-400"
+		name="nav-submenu"
+		id={ _id }
+	>
+		<summary class="px-3 py-4 hover:bg-gray-700 list-none grid grid-cols-[1fr_auto] border-l-4 border-transparent hover:border-cu_red-400">
+			<span>{ title }</span>
+			<span class="summary-indicator text-xl">🞃</span>
+		</summary>
+		<section>
+			{ children... }
+		</section>
+		@togglerControl()
+	</details>
+}
+
+templ MenuLink(href string, text string, attributes ...templ.Attributes) {
+	{{ attr := templ.Attributes{} }}
+	if len(attributes) != 0 {
+		{{ attr = attributes[0] }}
+	}
+	<a href={ templ.SafeURL(href) } class="block px-8 py-4 hover:bg-gray-700 border-l-4 border-transparent hover:border-cu_red-400" { attr... }>
+		{ text }
+	</a>
+}
+
+templ togglerControl() {
+	// script is only included once, and only if required
+	@togglerHandle.Once() {
+		<script>
+			function sidebarMenuToggler(details){
+				let section=details.querySelector("section");
+				let animationClasses=["animate-flip-down","animate-once","animate-duration-[250ms]","animate-ease-out"];
+
+				if (!details.open){
+					section.classList.remove(...animationClasses);
+					localStorage.removeItem(details.id);
+				} else {
+					section.classList.add(...animationClasses);
+					localStorage.setItem(details.id,"open")
+				}
+
+			}
+		</script>
+	}
+	// end once
+	//
+	// script is scoped to the closest ancestor details element
+	// this means that any variable declared in the script is scoped accordingly
+	//
+	// add the event handler 0.1 seconds after page load to avoid the animation on load
+	<script>{
+		let details=document.currentScript.closest("details");
+		details.open=localStorage.getItem(details.id)==="open";
+
+		setTimeout(()=>details.addEventListener("toggle",(ev)=>sidebarMenuToggler(ev.target)),100);
+	}</script>
+}
+
+var togglerHandle = templ.NewOnceHandle()

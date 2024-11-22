@@ -1,0 +1,55 @@
+package layouts
+
+import (
+	"github.com/pharrisee/stove/web"
+	"github.com/pharrisee/stove/web/components/sidebar"
+)
+
+templ Layout() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Document</title>
+			{{ stylesCSS := web.CB("/public/css/styles.css") }}
+			<link rel="preload" href={ stylesCSS } as="style"/>
+			<link rel="stylesheet" href={ stylesCSS }/>
+			<script src="https://unpkg.com/htmx.org@2.0.3"></script>
+		</head>
+		<body class="grid grid-cols-[18rem_1fr]">
+			@sidebar.New() {
+				@sidebar.Header(web.CB("/public/img/logo.svg")) {
+					Stove
+				}
+				@sidebar.Nav() {
+					@sidebar.Link("/", "Home", HXLink("/", "Home"))
+					@sidebar.Link("/about", "About", HXLink("/about", "About"))
+					@sidebar.Link("/contact", "Contact", HXLink("/contact", "Contact"))
+					@sidebar.Menu("SubMenu1") {
+						@sidebar.MenuLink("/menu1", "S1 Menu 1", HXLink("/menu1", "S1 Menu 1"))
+						@sidebar.MenuLink("/menu2", "S1 Menu 2", HXLink("/menu2", "S1 Menu 2"))
+					}
+					@sidebar.Menu("SubMenu2") {
+						@sidebar.MenuLink("/menu1", "S2 Menu 1", HXLink("/menu1", "S2 Menu 1"))
+						@sidebar.MenuLink("/menu2", "S2 Menu 2", HXLink("/menu2", "S2 Menu 2"))
+					}
+					@sidebar.Menu("SubMenu3") {
+						@sidebar.MenuLink("/menu1", "S3 Menu 1", HXLink("/menu1", "S3 Menu 1"))
+						@sidebar.MenuLink("/menu2", "S3 Menu 2", HXLink("/menu2", "S3 Menu 2"))
+					}
+				}
+				@sidebar.Footer() {
+					@sidebar.Link("/logout", "Logout")
+				}
+			}
+			<main class="p-4 pl-8" id="main-content">
+				{ children... }
+			</main>
+		</body>
+	</html>
+}
+
+func HXLink(href string, text string) templ.Attributes {
+	return templ.Attributes{"hx-get": href, "hx-target": "#main-content", "hx-swap": "innerHTML", "hx-push-url": "true"}
+}

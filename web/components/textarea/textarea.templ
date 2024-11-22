@@ -1,0 +1,63 @@
+package textarea
+
+import (
+	"context"
+	"fmt"
+	twmerge "github.com/Oudwins/tailwind-merge-go"
+	"io"
+)
+
+const (
+	TextareaCSS = "border border-gray-300 rounded-md p-2"
+)
+
+type (
+	textarea struct {
+		rows      int
+		cols      int
+		wordcount bool
+		extraCSS  string
+	}
+)
+
+func New() *textarea {
+	return &textarea{}
+}
+
+func (t *textarea) Rows(rows int) *textarea {
+	t.rows = rows
+	return t
+}
+
+func (t *textarea) Cols(cols int) *textarea {
+	t.cols = cols
+	return t
+}
+
+func (t *textarea) WordCount(wordcount bool) *textarea {
+	t.wordcount = wordcount
+	return t
+}
+
+func (t *textarea) ExtraCSS(extraCSS string) *textarea {
+	t.extraCSS = extraCSS
+	return t
+}
+
+func (t *textarea) Class() string {
+	return twmerge.Merge(TextareaCSS, t.extraCSS)
+}
+
+func (t *textarea) Render(c context.Context, w io.Writer) error {
+	return t.view().Render(c, w)
+}
+
+templ (t *textarea) view() {
+	<textarea
+		class={ t.Class() }
+		rows={ fmt.Sprint(t.rows) }
+		cols={ fmt.Sprint(t.cols) }
+	>
+		{ children... }
+	</textarea>
+}

@@ -1,0 +1,23 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  tidy: go mod tidy
+
+  templ: templ generate --watch
+
+  tw-old: tailwindcss -i ./src/tailwind.css -o ./web/public/css/styles.css -w -m
+
+  tw: 
+    dir: frontend
+    cmds: 
+      - npx tailwindcss -i ../src/tailwind.css -o ../web/public/css/styles.css --watch -m
+
+  air: air
+
+  dev:
+    deps: [air,tw,templ]

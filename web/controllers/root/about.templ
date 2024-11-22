@@ -1,0 +1,26 @@
+package root
+
+import (
+	"github.com/labstack/echo/v4"
+	"github.com/pharrisee/stove/app"
+	"github.com/pharrisee/stove/web/layouts"
+	"net/http"
+)
+
+templ (c *Root) AboutView() {
+	@layouts.Layout() {
+		@c.AboutPartial()
+	}
+}
+
+templ (c *Root) AboutPartial() {
+	<h1 class="text-4xl">About</h1>
+}
+
+func (r *Root) About(c echo.Context) error {
+	ctx := app.WrapCtx(c)
+	if ctx.IsHTMX() {
+		return ctx.Templ(http.StatusOK, r.AboutPartial())
+	}
+	return ctx.Templ(http.StatusOK, r.AboutView())
+}

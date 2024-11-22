@@ -1,0 +1,26 @@
+package root
+
+import (
+	"github.com/labstack/echo/v4"
+	"github.com/pharrisee/stove/app"
+	"github.com/pharrisee/stove/web/layouts"
+	"net/http"
+)
+
+templ (c *Root) IndexView() {
+	@layouts.Layout() {
+		@c.IndexPartial()
+	}
+}
+
+templ (c *Root) IndexPartial() {
+	<h1 class="text-4xl">Hello, World!</h1>
+}
+
+func (r *Root) Index(c echo.Context) error {
+	ctx := app.WrapCtx(c)
+	if ctx.IsHTMX() {
+		return ctx.Templ(http.StatusOK, r.IndexPartial())
+	}
+	return ctx.Templ(http.StatusOK, r.IndexView())
+}
